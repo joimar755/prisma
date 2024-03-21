@@ -17,10 +17,11 @@ model Product {
     id          Int       @id @default(autoincrement())
     name        String
     description String
-    price       Decimal
+    price       Int
     image       String
     category    Category? @relation(fields: [category_id], references: [id])
     category_id Int
+    detalles Detalle[]
     @@index([category_id])
 }
 
@@ -33,6 +34,7 @@ model Category {
 }
 model Detalle {
   id  Int @id @default(autoincrement())
-  //products    Product[]
+  product Product @relation(fields: [product_id], references: [id])
+  product_id Int
 
 }
