@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "../../Desktop/flask"
+		},
+		{
+			"path": "../propuesta fast api"
+		},
+		{
+			"path": "../java_projects/practica"
+		},
+		{
+			"name": "prisma",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

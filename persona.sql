@@ -6,7 +6,7 @@
 -- Tiempo de generación: 21-03-2024 a las 16:15:04
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.1.12
-
+use persona
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -73,6 +73,17 @@ CREATE TABLE `product` (
 INSERT INTO `product` (`id`, `name`, `description`, `price`, `image`, `category_id`) VALUES
 (1, 'Coca cola', 'Coca cola', 5200, '', 1),
 (2, 'Postobon', 'Postobon', 4000, '', 1);
+
+SELECT p.id, p.name, price, c.name, p.Stock
+FROM product p 
+INNER JOIN  category c ON p.category_id = c.id 
+GROUP BY p.id 
+
+
+SELECT p.id, p.name, price, c.name, p.Stock
+FROM product p 
+INNER JOIN  category c ON p.category_id = c.id 
+WHERE c.name = 'Productos desechables'
 
 -- --------------------------------------------------------
 
