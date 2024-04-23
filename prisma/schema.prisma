@@ -17,6 +17,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
 model Product {
     id          Int       @id @default(autoincrement())
     name        String    @unique
@@ -28,8 +30,6 @@ model Product {
     detalles Detalle[]
     @@index([category_id])
 }
-
-
 model Category {
     id          Int       @id @default(autoincrement())
     name        String
@@ -42,6 +42,5 @@ model Detalle {
   Subtotal Int  
   product Product @relation(fields: [product_id], references: [id])
   product_id Int
-  
   
 }

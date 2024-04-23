@@ -5,4 +5,5 @@ class products(BaseModel):
     description: str
     price: int
     Stock: int
-    category_id: int
+    category_id: int 
+    
