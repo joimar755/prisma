@@ -1,9 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class products(BaseModel):
-    name: str
-    description: str
+    name: str 
+    description: str 
     price: int
     Stock: int
     category_id: int 
+    
     
