@@ -2,11 +2,27 @@ from http.client import HTTPException
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from prisma import Prisma
+import requests
 from modelo.producto import products
 from modelo.user import Users
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
+def Dolar():
+    api_key = 'tu_clave_de_API'
+    base_currency = 'USD'
+    target_currency = 'COP'
+    url = f'https://open.er-api.com/v6/latest/{base_currency}?api_key={api_key}'
+
+    response = requests.get(url)
+    data = response.json()
+    exchange_rate = float(data['rates'][target_currency])
+    rounds = round(exchange_rate, 2)
+    ##print(exchange_rate)
+    return rounds
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 import jwt
 
@@ -23,13 +39,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
+    
 @app.get("/")
 async def get_user():
     async with Prisma() as db:
         data = await db.product.find_many()
-    return data
-@app.post("/api/registrar")
+    return {"resultado":data}
+@app.get("/dolar")
+async def get_user():
+    data = Dolar()
+    print(data)
+    return {"resultado":data}
+@app.get("/category")
+async def get_user():
+    async with Prisma() as db:
+        data = await db.category.find_many()
+    return {"resultado":data}
+@app.post("/api/user/registrar")
 async def register(user:Users):
     try:
       async with Prisma() as db:
@@ -38,9 +67,9 @@ async def register(user:Users):
             if existing_product:
                 return(jsonable_encoder({"error":"users with this name already exists"}))
             
-            existing_email = await db.users.find_unique(where={"name": user.email})
+            existing_email = await db.users.find_unique(where={"email": user.email})
             if existing_email:
-                return(jsonable_encoder({"error":"users with this name already exists"}))
+                return(jsonable_encoder({"error":"email with this name already exists"}))
                 
             hashed_password = pwd_context.hash(user.password)
 
@@ -54,7 +83,20 @@ async def register(user:Users):
             return {"message": "users agregado exitosamente", "data": data}
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
+@app.post("/api/login/login")
+async def login(user: Users):
+    try:
+        async with Prisma() as db:
+        # Buscar al usuario por nombre
+         user_db = await db.users.find_first(where={"name": user.name})
+        if not user_db or not pwd_context.verify(user.password, user_db.password):
+            return(jsonable_encoder({"Incorrect username or password"}))
+        return {"message": "Logged in successfully"}
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
 
+    
+    
 @app.get("/api/{id}")
 async def get_user(id: int):
     async with Prisma() as db:
