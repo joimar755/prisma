@@ -1,4 +1,6 @@
+from datetime import timedelta
 from http.client import HTTPException
+from modelo.token import ACCESS_TOKEN_EXPIRE_MINUTES , create_access_token
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 from prisma import Prisma
@@ -24,8 +26,6 @@ def Dolar():
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-import jwt
-
 app = FastAPI()
 prisma = Prisma()
 
@@ -39,8 +39,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+
 
     
 @app.get("/")
@@ -91,7 +90,11 @@ async def login(user: Users):
          user_db = await db.users.find_first(where={"name": user.name})
         if not user_db or not pwd_context.verify(user.password, user_db.password):
             return(jsonable_encoder({"Incorrect username or password"}))
-        return {"message": "Logged in successfully"}
+        access_token = create_access_token(
+         data={"sub": user.name}
+          )
+        return {"access_token":access_token, "token_type":"bearer"}
+        #return {"message": "Logged in successfully"}
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
