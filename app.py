@@ -1,12 +1,15 @@
 from datetime import timedelta
-from http.client import HTTPException
+from typing import Annotated
+
+from fastapi.security import OAuth2PasswordRequestForm
 from modelo.token import ACCESS_TOKEN_EXPIRE_MINUTES , create_access_token
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI,  HTTPException, status
+from modelo.oauth import get_current_user
 from fastapi.encoders import jsonable_encoder
 from prisma import Prisma
 import requests
 from modelo.producto import products
-from modelo.user import Users
+from modelo.user import Token, Users, Login
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
 def Dolar():
@@ -43,7 +46,7 @@ app.add_middleware(
 
     
 @app.get("/")
-async def get_user():
+async def get_user(current_user: Users = Depends(get_current_user)):
     async with Prisma() as db:
         data = await db.product.find_many()
     return {"resultado":data}
@@ -82,16 +85,16 @@ async def register(user:Users):
             return {"message": "users agregado exitosamente", "data": data}
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
-@app.post("/api/login/login")
-async def login(user: Users):
+@app.post("/api/login/login", response_model=Token)
+async def login(user: OAuth2PasswordRequestForm = Depends()):
     try:
         async with Prisma() as db:
         # Buscar al usuario por nombre
-         user_db = await db.users.find_first(where={"name": user.name})
+         user_db = await db.users.find_first(where={"name": user.username})
         if not user_db or not pwd_context.verify(user.password, user_db.password):
             return(jsonable_encoder({"Incorrect username or password"}))
         access_token = create_access_token(
-         data={"sub": user.name}
+         data={"sub": user_db.name}
           )
         return {"access_token":access_token, "token_type":"bearer"}
         #return {"message": "Logged in successfully"}
