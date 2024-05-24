@@ -1,6 +1,7 @@
 from datetime import timedelta
 from typing import Annotated
 
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from modelo.token import ACCESS_TOKEN_EXPIRE_MINUTES , create_access_token
 from fastapi import Depends, FastAPI,  HTTPException, status
@@ -35,7 +36,7 @@ prisma = Prisma()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*"
+        'http://localhost:3000'
     ],  # En producción, especifica los dominios permitidos en lugar de "*"
     allow_credentials=True,
     allow_methods=["*"],
@@ -92,11 +93,14 @@ async def login(user: OAuth2PasswordRequestForm = Depends()):
         # Buscar al usuario por nombre
          user_db = await db.users.find_first(where={"name": user.username})
         if not user_db or not pwd_context.verify(user.password, user_db.password):
-            return(jsonable_encoder({"Incorrect username or password"}))
+            return JSONResponse("Incorrect username or password")
+
         access_token = create_access_token(
          data={"sub": user_db.name}
           )
-        return {"access_token":access_token, "token_type":"bearer"}
+        token = {"access_token":access_token, "token_type":"bearer"}
+        return JSONResponse(token)
+    
         #return {"message": "Logged in successfully"}
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))

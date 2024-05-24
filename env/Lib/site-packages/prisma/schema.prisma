@@ -18,7 +18,7 @@ datasource db {
 }
 
 model Users{
-  id          Int @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String    @unique
   email       String    @unique
   password    String    
@@ -33,7 +33,7 @@ model Product {
     category    Category? @relation(fields: [category_id], references: [id])
     category_id Int
     detalles Detalle[]
-    @@index([category_id])
+    @@index([category_id]) 
 }
 model Category {
     id          Int       @id @default(autoincrement())
