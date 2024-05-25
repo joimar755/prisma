@@ -68,20 +68,21 @@ async def register(user:Users):
             # Verificar si ya existe un producto con el mismo nombre
             existing_product = await db.users.find_unique(where={"name": user.name})
             if existing_product:
+                return JSONResponse("users with this name already exists")
                 return(jsonable_encoder({"error":"users with this name already exists"}))
             
             existing_email = await db.users.find_unique(where={"email": user.email})
             if existing_email:
-                return(jsonable_encoder({"error":"email with this name already exists"}))
+                return JSONResponse("email with this name already exists")
                 
             hashed_password = pwd_context.hash(user.password)
 
             data = await db.users.create(
-                data={
+                {
                 "name": user.name,
                 "email": user.email,
                 "password": hashed_password
-            }
+                }
             )
             return {"message": "users agregado exitosamente", "data": data}
     except Exception as error:
