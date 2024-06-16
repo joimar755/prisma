@@ -1,18 +1,23 @@
 {
   "name": "prisma",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joimar755/prisma.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joimar755/prisma/issues"
+  },
+  "homepage": "https://github.com/joimar755/prisma#readme",
   "dependencies": {
-    "@prisma/client": "^5.12.0"
-  },
-  "devDependencies": {
-    "prisma": "^5.13.0"
-  },
-  "description": ""
+    "prisma": "^5.15.0"
+  }
 }

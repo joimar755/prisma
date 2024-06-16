@@ -13,6 +13,9 @@ from modelo.producto import products
 from modelo.user import Token, Users, Login
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
+
+
+
 def Dolar():
     api_key = 'tu_clave_de_API'
     base_currency = 'USD'
