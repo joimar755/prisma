@@ -28,10 +28,15 @@ INSERT INTO `Category` (`id`, `name`, `description`) VALUES
 INSERT INTO `detalle` (`id`, `cantidad`, `Subtotal`, `product_id`) VALUES
 	(1, 2, 10400, 1);
 
+<<<<<<< HEAD
 -- Volcando datos para la tabla persona.product: ~8 rows (aproximadamente)Error: Field 'image' doesn't have a default value
 
 
 INSERT INTO `Product` (`id`, `name`, `price`, `category_id`, `Stock`, `description`) VALUES
+=======
+-- Volcando datos para la tabla persona.product: ~8 rows (aproximadamente)
+INSERT INTO `product` (`id`, `name`, `price`, `category_id`, `Stock`, `description`) VALUES
+>>>>>>> 4a5d8fb0fee00f23929bb13040adeb5637327d5d
 	(1, 'Coca cola', 5200, 1, 10, 'Coca cola'),
 	(2, 'Postobon', 4300, 1, 10, 'Postobon'),
 	(3, 'vasos 7onz caribe', 1500, 6, 20, 'vasos 7onz caribe'),
@@ -59,6 +64,11 @@ INSERT INTO `Product` (`id`, `name`, `price`, `category_id`, `Stock`, `descripti
 	(59, 'cuchara pequeña x 100', 2700, 6, 10, 'cuchara pequeña'),
 	(60, 'vasos 16onz hico', 5500, 6, 10, 'hicopor'),
 	(61, 'vasos 7onz tuc', 1500, 6, 10, 'vasos 7onz tuc');
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 4a5d8fb0fee00f23929bb13040adeb5637327d5d
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
