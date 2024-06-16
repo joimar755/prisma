@@ -15,7 +15,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Volcando datos para la tabla persona.category: ~7 rows (aproximadamente)
-INSERT INTO `category` (`id`, `name`, `description`) VALUES
+INSERT INTO `Category` (`id`, `name`, `description`) VALUES
 	(1, 'Gaseosa', 'Gaseosa'),
 	(2, 'Panadería', 'Panadería'),
 	(3, 'Productos gourmet', 'Productos gourmet'),
@@ -28,16 +28,37 @@ INSERT INTO `category` (`id`, `name`, `description`) VALUES
 INSERT INTO `detalle` (`id`, `cantidad`, `Subtotal`, `product_id`) VALUES
 	(1, 2, 10400, 1);
 
--- Volcando datos para la tabla persona.product: ~8 rows (aproximadamente)
-INSERT INTO `product` (`id`, `name`, `description`, `price`, `Stock`, `category_id`) VALUES
-	(1, 'Coca cola', 'Coca cola', 5200, 10, 1),
-	(2, 'Postobon', 'Postobon', 4300, 10, 1),
-	(3, 'vasos 7onz caribe', 'vasos 7onz caribe', 1500, 20, 6),
-	(4, 'vasos 3.3onz color', 'vasos 3.3onz color', 2200, 20, 6),
-	(5, 'astra', 'astra', 12000, 500, 7),
-	(6, 'pan super', 'pan super', 6700, 5, 2),
-	(7, 'pan mini', 'pan mini', 4000, 10, 2),
-	(10, 'pan hamburgesa', 'pan hamburgesa', 5500, 10, 2);
+-- Volcando datos para la tabla persona.product: ~8 rows (aproximadamente)Error: Field 'image' doesn't have a default value
+
+
+INSERT INTO `Product` (`id`, `name`, `price`, `category_id`, `Stock`, `description`) VALUES
+	(1, 'Coca cola', 5200, 1, 10, 'Coca cola'),
+	(2, 'Postobon', 4300, 1, 10, 'Postobon'),
+	(3, 'vasos 7onz caribe', 1500, 6, 20, 'vasos 7onz caribe'),
+	(4, 'vasos 3.3onz color', 2200, 6, 20, 'vasos 3.3onz color'),
+	(5, 'astra', 12000, 7, 500, 'astra'),
+	(6, 'pan super', 6700, 2, 5, 'pan super'),
+	(36, 'bolsa 3 k ', 3300, 6, 10, 'bolsa 3 k '),
+	(37, 'bolsa 5 k', 3000, 6, 10, 'bolsa 5 k'),
+	(40, 'bolsa 10 k', 7000, 6, 20, 'bolsa 10 k'),
+	(41, 'bolsa 15 k', 10000, 6, 10, 'bolsa 15 k'),
+	(42, 'bolsa 20 k', 20000, 6, 10, 'bolsa 20 k'),
+	(43, 'bolsa 30 k', 30000, 6, 10, 'bolsa 30 k'),
+	(44, 'vasos 9 onz', 2200, 6, 10, 'vasos 9 onz'),
+	(45, 'servilleta ', 4500, 6, 10, 'servilleta'),
+	(46, 'vasos 5 onz', 2499, 6, 10, 'vasos 5 onz'),
+	(47, 'pan mini', 4000, 2, 10, 'pan mini'),
+	(48, 'crema de leche x 200gr', 4500, 5, 10, '200gr'),
+	(50, 'porta comida j1', 500, 6, 50, 'portacomida'),
+	(52, 'porta comida j2', 500, 6, 50, 'portacomida j2'),
+	(53, 'bolsa papel #2', 4400, 6, 10, 'papel #2'),
+	(54, 'bolsa papel #3', 5400, 6, 10, 'papel #3'),
+	(55, 'cucharas x 100', 5000, 6, 10, 'cuchara'),
+	(56, 'tenedor x 100', 5000, 6, 10, 'tenedor'),
+	(57, 'cuchillo x 100', 4800, 6, 10, 'cuchillo'),
+	(59, 'cuchara pequeña x 100', 2700, 6, 10, 'cuchara pequeña'),
+	(60, 'vasos 16onz hico', 5500, 6, 10, 'hicopor'),
+	(61, 'vasos 7onz tuc', 1500, 6, 10, 'vasos 7onz tuc');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
