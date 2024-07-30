@@ -1,6 +1,8 @@
 from datetime import timedelta
 from typing import Annotated
-
+from modelo.Detalle import Detalle
+from modelo.Venta import Venta
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from modelo.token import ACCESS_TOKEN_EXPIRE_MINUTES , create_access_token
@@ -13,6 +15,14 @@ from modelo.producto import products
 from modelo.user import Token, Users, Login
 from fastapi.middleware.cors import CORSMiddleware
 from passlib.context import CryptContext
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+database_url = os.getenv("DATABASE_URL")
+secret_key = os.getenv("SECRET_KEY")
+
+
 def Dolar():
     api_key = 'tu_clave_de_API'
     base_currency = 'USD'
@@ -142,13 +152,32 @@ async def get_user():
                     "price": result.price,
                     "Stock": result.Stock,
                     "category": result.category.name if result.category else None,
-                    "detalles": result.detalles,
+                    "detalles": result.detalles
                 }
             )
         data = payload
         ##print(payload)
     return data
-
+@app.get("/venta")
+async def get_user():
+    async with Prisma() as db:
+        data = await db.venta.find_many(
+            # where={"id": id},
+            include={"detalles": True}
+        )
+        print(len(data))
+        payload = []
+        for result in data:
+            payload.append(
+                {
+                    "id": result.id,
+                    "total": result.total,
+                    "detalles": result.detalles
+                }
+            )
+        data = payload
+        ##print(payload)
+    return data
 
 @app.post("/datos/insertar")
 async def create_Products(product: products,):
@@ -160,6 +189,31 @@ async def create_Products(product: products,):
                 return(jsonable_encoder({"error":"Product with this name already exists"}))
             data = await db.product.create(data=product.model_dump())
             return {"message": "Producto agregado exitosamente", "data": data}
+
+    except HTTPException as error_http:
+        raise error_http
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+@app.post("/datos/comprar")
+async def create_Products(compra: Venta,):
+    try:
+        async with Prisma() as db:
+            nueva_venta = await db.venta.create(
+            data={
+                'total': compra.total,
+                'detalles':{
+                    'create':[
+                       {
+                         'product_id':item.product_id,
+                         'Subtotal':item.Subtotal,
+                         'cantidad':item.cantidad
+                       }for item in compra.items
+                    ]
+                 }
+                }
+            )
+            return {"message": "venta agregado exitosamente", "data":nueva_venta}
 
     except HTTPException as error_http:
         raise error_http

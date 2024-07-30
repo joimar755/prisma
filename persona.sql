@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `category`
 --
 
-CREATE TABLE `category` (
+CREATE TABLE `Category` (
   `id` int(11) NOT NULL,
   `name` varchar(191) NOT NULL,
   `description` varchar(191) NOT NULL
@@ -46,7 +46,7 @@ INSERT INTO `category` (`id`, `name`, `description`) VALUES
 -- Estructura de tabla para la tabla `detalle`
 --
 
-CREATE TABLE `detalle` (
+CREATE TABLE `Detalle` (
   `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -57,12 +57,12 @@ CREATE TABLE `detalle` (
 -- Estructura de tabla para la tabla `product`
 --
 
-CREATE TABLE `product` (
+CREATE TABLE `Product` (
   `id` int(11) NOT NULL,
   `name` varchar(191) NOT NULL,
   `description` varchar(191) NOT NULL,
   `price` int(11) NOT NULL,
-  `image` varchar(191) NOT NULL,
+  `Stock` varchar(191) NOT NULL,
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -125,14 +125,14 @@ ALTER TABLE `category`
 --
 -- Indices de la tabla `detalle`
 --
-ALTER TABLE `detalle`
+ALTER TABLE `Detalle`
   ADD PRIMARY KEY (`id`),
   ADD KEY `Detalle_product_id_fkey` (`product_id`);
 
 --
 -- Indices de la tabla `product`
 --
-ALTER TABLE `product`
+ALTER TABLE `Product`
   ADD PRIMARY KEY (`id`),
   ADD KEY `Product_category_id_idx` (`category_id`);
 
@@ -149,13 +149,13 @@ ALTER TABLE `_prisma_migrations`
 --
 -- AUTO_INCREMENT de la tabla `category`
 --
-ALTER TABLE `category`
+ALTER TABLE `Category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle`
 --
-ALTER TABLE `detalle`
+ALTER TABLE `Detalle`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -177,7 +177,7 @@ ALTER TABLE `detalle`
 --
 -- Filtros para la tabla `product`
 --
-ALTER TABLE `product`
+ALTER TABLE `Product`
   ADD CONSTRAINT `Product_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
