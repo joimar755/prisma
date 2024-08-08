@@ -158,24 +158,45 @@ async def get_user():
         data = payload
         ##print(payload)
     return data
-@app.get("/venta")
-async def get_user():
+@app.get("/venta/{id}")
+async def get_user(id:int):
     async with Prisma() as db:
         data = await db.venta.find_many(
-            # where={"id": id},
-            include={"detalles": True}
+            where={"id": id},
+            include={"detalles":{
+                "include":{
+                    "product":True
+                }
+            }
+            }
         )
         print(len(data))
         payload = []
         for result in data:
-            payload.append(
+            #detalles = []
+             for detalle in result.detalles:
+              payload.append(
                 {
                     "id": result.id,
                     "total": result.total,
-                    "detalles": result.detalles
+                    "date_time":result.createdAt,
+                    "detalles":[
+                        {
+                          "cantidad": detalle.cantidad,
+                          "price": detalle.product.price,
+                          "producto_name":detalle.product.name,
+                        }
+                    ]
                 }
             )
         data = payload
+        ##print(payload)
+    return data
+
+@app.get("/venta")
+async def get_user():
+    async with Prisma() as db:
+        data = await db.venta.find_many()
         ##print(payload)
     return data
 
