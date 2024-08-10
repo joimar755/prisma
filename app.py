@@ -206,7 +206,8 @@ async def obtener_total_diario():
      ventas = await db.venta.find_many()
      suma_total = sum(venta.total for venta in ventas)
      promedio = suma_total / len(ventas)
-    return promedio
+     convert = int(promedio)
+    return convert
 
 
 
