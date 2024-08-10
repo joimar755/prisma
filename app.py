@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Annotated
 from modelo.Detalle import Detalle
 from modelo.Venta import Venta
@@ -203,11 +203,28 @@ async def get_user():
 async def obtener_total_diario():
     # Filtra las ventas por la fecha
     async with Prisma() as db:
-     ventas = await db.venta.find_many()
-     suma_total = sum(venta.total for venta in ventas)
-     promedio = suma_total / len(ventas)
-     convert = int(promedio)
-    return convert
+      result = await db.query_raw(
+        """
+        SELECT DATE(createdAt) AS fecha, SUM(total) AS total_diario
+        FROM venta
+        GROUP BY DATE(createdAt)
+        ORDER BY DATE(fecha)
+        """
+    )
+
+    # Cierra la conexión a la base de datos
+    await db.disconnect()
+
+    # Estructura el resultado
+    payload = [
+        {
+            "fecha": results["fecha"],
+            "total": results["total_diario"]
+        }
+        for results in result
+    ]
+
+    return payload
 
 
 
