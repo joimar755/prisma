@@ -10,3 +10,17 @@ repetidos = await db.product.find_unique(
 
             if existing_product:
                 return(jsonable_encoder({"error":"Product with this name already exists"}))
+
+@app.get("/total-diario")
+async def obtener_total_diario():
+    # Filtra las ventas por la fecha
+    async with Prisma() as db:
+     ventas = await db.venta.find_many()
+     suma_total = sum(venta.total for venta in ventas)
+     promedio = suma_total / len(ventas)
+    return promedio
+
+    SELECT DATE(createdAt) AS fecha, SUM(total) AS total_diario
+        FROM venta
+        GROUP BY DATE(createdAt)
+        ORDER BY fecha
