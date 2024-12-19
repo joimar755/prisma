@@ -44,7 +44,7 @@ RUN /bin/bash -c "source venv/bin/activate && pip install 'uvicorn[standard]'"
 COPY . .
 COPY .env /app/
 RUN /bin/bash -c "source venv/bin/activate && pip install python-jose "
-RUN prisma generate
+RUN npx prisma@5.17.0 migrate 
 #RUN prisma db push
 
 
