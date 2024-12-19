@@ -5,3 +5,6 @@ prueba.sql
 prueba.sql
 __pycache__/app.cpython-312.pyc
 prisma/schema.prisma
+prueba2.sql
+prisma.code-workspace
+start.sh
