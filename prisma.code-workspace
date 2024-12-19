@@ -1,0 +1,46 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Sistema_web",
+			"path": "../Sistema_web"
+		},
+		{
+			"path": "../python_QT"
+		},
+		{
+			"path": "F:/Documentos/react_login_form"
+		},
+		{
+			"path": "F:/Documentos/react-signin-signup-form"
+		},
+		{
+			"path": "../cul/Confederacion"
+		},
+		{
+			"path": "F:/Documentos/Mysql-fastapi"
+		},
+		{
+			"path": "../../Desktop/fastapi-react-auth"
+		},
+		{
+			"path": "F:/Documentos/Sistema_carros"
+		},
+		{
+			"name": "material-dashboard-react-main",
+			"path": "../material-dashboard-react-main"
+		},
+		{
+			"path": "../gorra"
+		},
+		{
+			"path": "../sistema_web_gorra"
+		},
+		{
+			"path": "../tiendaonline"
+		}
+	],
+	"settings": {}
+}

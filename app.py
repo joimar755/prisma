@@ -1,16 +1,17 @@
 from datetime import date, datetime, timedelta
+import hashlib
 from typing import Annotated
+import uuid
 from modelo.Detalle import Detalle
 from modelo.Venta import Venta
-from fastapi import FastAPI
+from fastapi import FastAPI, requests
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from modelo.token import ACCESS_TOKEN_EXPIRE_MINUTES , create_access_token
-from fastapi import Depends, FastAPI,  HTTPException, status
+from fastapi import Depends, FastAPI,  HTTPException, status,  Request
 from modelo.oauth import get_current_user
 from fastapi.encoders import jsonable_encoder
 from prisma import Prisma
-import requests
 from modelo.producto import products
 from modelo.user import Token, Users, Login
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +19,14 @@ from passlib.context import CryptContext
 from dotenv import load_dotenv
 import os
 load_dotenv()
+
+PAYU_API_URL = "https://gateway.payulatam.com/ppp-web-gateway/"
+API_KEY = "oxZ8YDZA465t6bx53B24q6EksH"
+ACCOUNT_ID = "1022612"
+MERCHANT_ID = "1013710"
+CURRENCY = "COP"
+RESPONSE_URL = "http://www.test.com/response"
+CONFIRMATION_URL = "http://www.test.com/confirmation"
 
 database_url = os.getenv("DATABASE_URL")
 secret_key = os.getenv("SECRET_KEY")
@@ -46,7 +55,7 @@ prisma = Prisma()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-       "*"
+        'http://localhost:5173'
     ],  # En producción, especifica los dominios permitidos en lugar de "*"
     allow_credentials=True,
     allow_methods=["*"],
@@ -204,17 +213,15 @@ async def obtener_total_diario():
     # Filtra las ventas por la fecha
     async with Prisma() as db:
       result = await db.query_raw(
+        
         """
         SELECT DATE(createdAt) AS fecha, SUM(total) AS total_diario
         FROM venta
         GROUP BY DATE(createdAt)
-        ORDER BY DATE(fecha)
         """
     )
-
     # Cierra la conexión a la base de datos
     await db.disconnect()
-
     # Estructura el resultado
     payload = [
         {
@@ -225,8 +232,6 @@ async def obtener_total_diario():
     ]
 
     return payload
-
-
 
 @app.post("/datos/insertar")
 async def create_Products(product: products,):
@@ -269,6 +274,8 @@ async def create_Products(compra: Venta,):
     except Exception as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+
+
 @app.put("/api/{id}")
 async def update_products(id: int, product: products):
     async with Prisma() as db:
@@ -282,3 +289,44 @@ async def update_products(id: int):
         data = await db.product.delete(where={"id": id})
         
     return {"message":"producto eliminado","data":data}
+
+def generate_signature(reference_code, amount, currency):
+    signature_string = f"{API_KEY}~{MERCHANT_ID}~{reference_code}~{amount}~{currency}"
+    return hashlib.md5(signature_string.encode('utf-8')).hexdigest()
+
+@app.post("/api/payu/payment")
+async def create_transaction(payment_request: Venta):
+    try: 
+        reference_code = str(uuid.uuid4())
+        amount =  float(payment_request.total)  # Convierte a centavos
+        signature = generate_signature(reference_code, amount, CURRENCY)
+    
+        # Guardar la venta en la base de datos utilizando Prisma
+        async with Prisma() as db:
+            nueva_venta = await db.venta.create(
+                data={
+                    'total': amount,
+                    'detalles': {
+                        'create': [
+                            {
+                                'product_id': item.product_id,
+                                'Subtotal': item.Subtotal,
+                                'cantidad': item.cantidad
+                            } for item in payment_request.items
+                        ]
+                    }
+                }
+            )
+
+        return {
+            "referenceCode": reference_code,
+            "signature": signature,
+            "amount": amount,
+            "message": "Venta agregada exitosamente",
+            "data": nueva_venta
+        }
+
+    except HTTPException as error_http:
+        raise error_http
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
