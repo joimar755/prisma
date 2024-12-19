@@ -13,9 +13,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://control_hty2_user:8hlMf9vMThXSOkD59kpQnl8YjvOp0ooC@dpg-cti3l856l47c738ep7ag-a.oregon-postgres.render.com:5432/control_hty2"
+  url      = env("DATABASE_URL")
+  
 }
-
+//url      = "postgresql://control_hty2_user:8hlMf9vMThXSOkD59kpQnl8YjvOp0ooC@dpg-cti3l856l47c738ep7ag-a.oregon-postgres.render.com:5432/control_hty2"
 model Users {
   id       Int    @id @default(autoincrement())
   name     String @unique
