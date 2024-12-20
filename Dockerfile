@@ -30,6 +30,11 @@ RUN pip install prisma
 RUN pip install passlib
 RUN pip install pydantic
 RUN pip install requests
+RUN pip install uvicorn[standard]
+RUN pip install psycopg2-binary
+RUN pip install python-dotenv 
+RUN pip install python-multipart
+
 
 
 
@@ -44,7 +49,8 @@ RUN /bin/bash -c "source venv/bin/activate && pip install 'uvicorn[standard]'"
 COPY . .
 COPY .env /app/
 RUN /bin/bash -c "source venv/bin/activate && pip install python-jose "
-RUN npx prisma@5.17.0 migrate 
+RUN prisma generate
+
 #RUN prisma db push
 
 
