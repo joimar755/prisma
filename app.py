@@ -55,7 +55,7 @@ prisma = Prisma()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        'http://localhost:5173'
+        "*"
     ],  # En producción, especifica los dominios permitidos en lugar de "*"
     allow_credentials=True,
     allow_methods=["*"],
@@ -193,7 +193,8 @@ async def get_user(id:int):
                         {
                           "cantidad": detalle.cantidad,
                           "price": detalle.product.price,
-                          "producto_name":detalle.product.name,
+                          "producto_name":detalle.product.name, 
+                          "subtotal": detalle.Subtotal
                         }
                     ]
                 }
