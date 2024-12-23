@@ -216,9 +216,9 @@ async def obtener_total_diario():
       result = await db.query_raw(
         
         """
-        SELECT DATE(createdAt) AS fecha, SUM(total) AS total_diario
-        FROM venta
-        GROUP BY DATE(createdAt)
+       SELECT DATE("createdAt") AS fecha, SUM(total) AS total_diario
+        FROM "Venta" 
+        GROUP BY DATE("createdAt")
         """
     )
     # Cierra la conexión a la base de datos
