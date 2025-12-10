@@ -28,7 +28,7 @@ CURRENCY = "COP"
 RESPONSE_URL = "http://www.test.com/response"
 CONFIRMATION_URL = "http://www.test.com/confirmation"
 
-database_url = os.getenv("DATABASE_URL")
+database_url = os.getenv("DATABASE_URL_1")
 secret_key = os.getenv("SECRET_KEY")
 
 

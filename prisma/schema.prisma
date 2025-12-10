@@ -8,12 +8,11 @@ generator client {
   //provider = "prisma-client-js"
   provider  = "prisma-client-py"
   interface = "asyncio"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL_1")            // Conexión directa normal a Postgres
 }
 //url      = "postgresql://control_hty2_user:8hlMf9vMThXSOkD59kpQnl8YjvOp0ooC@dpg-cti3l856l47c738ep7ag-a.oregon-postgres.render.com:5432/control_hty2"
 model Users {
